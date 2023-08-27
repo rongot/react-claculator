@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+ <link rel="stylesheet" href="main.css">
+<title>myPage</title>
+
+<script src= "https://unpkg.com/react@16/umd/react.production.min.js"></script>
+<script src= "https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+<script src= "https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+<body>
+
+<div id="root"></div>
+
+<script type="text/babel">
+
+function Calculator(){
+    // first value will give us the access to the current value of the state 0
+    // function setdisplay will alow us to update the state to the new value
+
+    const [calc ,setCalc]=React.useState({
+        current:"0",
+        total:"0",
+        isInitial:true,
+        preOp:""
+        
+    });
+    function handleNumber(value){
+        // alert(value+'number');
+        let newValue=value;
+        if(!calc.isInitial){
+            
+            newValue=calc.current + value
+        }
+        setCalc({current:newValue , total:calc.total ,isInitial:false,preOp:calc.preOp})
+    }
+    function handleOperator(value){
+        // alert(value+'operator');
+        const total=doCalculation()
+        setCalc({current:total.toString() ,total:total.toString(),isInitial:true ,preOp:value})
+        
+    }
+    function doCalculation(){
+        let total =parseInt(calc.total)
+        // debugger;
+        
+        switch (calc.preOp){
+            case "+":
+                total=total+parseInt(calc.current);
+                break;
+            case "-":
+               total-= parseInt(calc.current);
+               break;
+            case "*":
+              total*= parseInt(calc.current);
+               break;
+            case "/":
+               total/= parseInt(calc.current);
+               break;
+            default:
+                total= parseInt(calc.current);
+        }
+        return total;
+     }
+    function renderDisplay(){
+        return calc.current
+    }
+    function handleClear(){
+       setCalc({
+        current:"0",
+        total:"0",
+        isInitial:true,
+        preOp:"" 
+    })
+}
+function handleEqual(value){
+    let total=doCalculation();
+    console.log(value)
+    console.log(total)
+    setCalc({current:total.toString() ,total:total.toString(),isInitial:true ,preOp:"="})
+
+
+}
+    return (
+        <div className="calculator">
+            <div className="display">{renderDisplay()}</div>
+            <CalcButton value="7" onClick={handleNumber}/>
+            <CalcButton value="8" onClick={handleNumber}/>
+            <CalcButton value="9" onClick={handleNumber}/>
+            <CalcButton className="operator" onClick={handleOperator} value="/" />
+
+            <CalcButton value="4" onClick={handleNumber}/> 
+            <CalcButton value="5" onClick={handleNumber}/>
+            <CalcButton value="6" onClick={handleNumber}/>
+            <CalcButton className="operator"  onClick={handleOperator} value="*"/>
+
+            <CalcButton value="1" onClick={handleNumber}/>
+            <CalcButton value="2" onClick={handleNumber}/>
+            <CalcButton value="3" onClick={handleNumber}/>
+            <CalcButton className="operator" onClick={handleOperator} value="-"/>
+
+            <CalcButton value="C" onClick={handleClear} />
+            <CalcButton value="0" onClick={handleNumber}/>
+            <CalcButton value="=" onClick={handleOperator}/>
+            <CalcButton className="operator" onClick={handleOperator} value="+"/>
+
+
+        </div>
+        
+        );
+}
+function CalcButton(props){
+    // console.log(props)
+    return <button className={props.className} onClick={()=>props.onClick(props.value)}>{props.value}</button>
+}
+ReactDOM.render(<div className="app-container"><Calculator /></div>, document.getElementById('root'));
+</script>
+
+</body>
+</html>
